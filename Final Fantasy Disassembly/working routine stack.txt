@@ -1,0 +1,6 @@
+A400
+
+A4FD ^
+A5E4            - move and set
+A604            - adjust 38,39 according to source byte
+A64C            - set pixel at x,y

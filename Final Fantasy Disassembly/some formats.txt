@@ -1,0 +1,104 @@
+
+--------------------------------------------
+overworld tile data:
+
+First byte  [SSdf ascw]
+  SS=11 = raise airship
+  SS=10 = caravan
+  SS=01 = need chime
+
+  d = dock ship
+  f = forest
+  a = no airship
+  s = no ship
+  c = no canoe
+  w = no walk
+
+
+Second byte
+  $80 = teleport (low bits indicate which teleport)
+  $40 = fight
+      $40    = normal
+      $41/43 = river
+      $42    = ocean
+  otherwise no fight
+
+---------------------------------------------
+
+SM tile data:
+
+First Byte [TTBs sssm]
+  TT=11 = 'exit' teleport    (next byte indicates teleport ID)
+  TT=10 = 'normal' teleport  (  "    "
+  TT=01 = 'warp' teleport
+
+  B = reserved for battle marking in code -- isn't set in the ROM!
+  m = no move
+
+
+ssss=0001 = open rooms (next byte is shop ID if nonzero -- just normal door if zero)
+    =0010 = locked door
+    =0011 = close rooms
+    =0100 = treasure chest (next byte is TC id)
+    =0101 = battle (next byte indicated fixed enounter, or $80 for random encounters)
+    =0110 = damage square (lower HP)
+    =0111 = need crown
+    =1000 = need cube
+    =1001 = need 4 orbs
+    =1010 = use rod
+    =1011 = use lute
+    =1100 = earth orb
+    =1101 = fire orb
+    =1110 = water orb
+    =1111 = air orb
+
+
+--------------------------------------------
+Enemy data
+
+$14 bytes:
+
+0,1 = Experience
+2,3 = GP reward
+4,5 = HP
+6   = Morale
+7   = AI
+8   = ?Agility?
+9   = Defense
+A   = Number of hits
+B   = Hit rate
+C   = ?Strength?
+D   = Critical rate
+E   = ?Unknown?
+F   = Attack Ailment
+10  = Category
+11  = ?Mag Def?
+12  = El Weakness
+13  = El Resist
+    
+
+--------------------------------------------
+
+Battle data
+
+0: high 4 bits = battle type  (0=9 small, 1=4 large, 2=mix, 3=fiend, 4=chaos)
+0: low 4 bits = pattern selection
+
+1: pic assignment (2 bits per en) -- bit reversed
+
+2-5:  enemy IDs
+
+6: min/max for en0 (formation A)
+7: min/max for en1 (formation A)
+8: min/max for en2 (formation A)
+9: min/max for en3 (formation A)
+
+A: Palette ID 0
+B: Palette ID 1
+
+C: suprised rate
+
+D: high 4 bits=palette assignement.  bit0 = no run
+
+E: min/max for en0 (formation B)
+F: min/max for en1 (formation B)
