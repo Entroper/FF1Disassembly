@@ -21,7 +21,7 @@ be able to see most of them.  I try to get into detail of how they're bugged and
 offer a suggested fix.
 
 
-The *.asm files are pretty self explanitory.  However there are a few other files:
+The *.asm files are pretty self explanatory.  However there are a few other files:
 
 - build.bat is a batch file to generate a ROM from the source.  So just make your changes to
    the asm, run build.bat, and your hack is done!  **NOTE** that build.bat will delete any
