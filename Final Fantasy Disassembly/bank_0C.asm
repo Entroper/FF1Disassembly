@@ -134,7 +134,6 @@ lut_EnemyAi:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ExitBattle:
-    JSR ReSortPartyByAilment        ; rearrange party to put sick/dead members in the back
     JSR BattleFadeOut               ; Fade to black
     
     LDA btl_result                  ; check battle result
@@ -5449,94 +5448,6 @@ SwapCharOBStats:
       CPY #$40
       BNE @Loop
       
-    RTS
-    
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;  lut_AilmentWeight  [$AC92 :: 0x32CA2]
-;;
-;;    Table to add weight to characters with ailments so they will
-;;  be moved to the back of the party when the party is sorted.  This
-;;  is used to move dead/stone/poisoned chars to the back of the party
-;;  after battle.
-;;
-;;    Weight is placed in high 4 bits, since the char index is in the low
-;;  2 bits.  Higher weight = move to back of party.
-
-lut_AilmentWeight:
-  .BYTE $00     ; no ailment (no weight)
-  .BYTE $40     ; dead (highest weight)
-  .BYTE $20     ; stone
-  .BYTE $10     ; poison
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;  ReSortPartyByAilment  [$AC96 :: 0x32CA6]
-;;
-;;    This moves characters around in the party order to move dead/
-;;  stone/poison enemies to the back of the party.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-ReSortPartyByAilment:
-    LDX #$00                    ; X is character index and loop up counter
-  @WeightLoop:
-      TXA                       ; shift left 6 to get character stat index
-      ASL A
-      ASL A
-      ASL A
-      ASL A
-      ASL A
-      ASL A
-      TAY                       ; char index in Y
-      
-      LDA ch_ailments, Y        ; get their ailments (now in OB format)
-      AND #$03
-      TAY                       ; ailments in Y
-      
-      TXA                       ; char index in A
-      CLC
-      ADC lut_AilmentWeight, Y  ; add ailment weight to character index
-      STA char_order_buf, X     ; store in char order buffer
-      
-      INX
-      CPX #$04
-      BNE @WeightLoop           ; loop 4 times (for each character)
-      
-    ; Now that ailment weights are added, we can just sort char_order_buf to
-    ;  go in ascending order, and characters will debilitating ailments will be
-    ;  moved to the back of the party.  (Or at least they would if it sorted
-    ;  properly -- see below for explanation of how this is bugged).
-    
-                @outerloopctr = $8A
-                @loopctr = $8B
-    
-    STX @outerloopctr               ; X=4 at this point, do the outer loop 4 times
-@OuterSortLoop:
-    LDA #$00                        ; inner loop counter -- loop 3 times
-    STA @loopctr
-    
-  @InnerLoop:
-      LDY @loopctr
-      LDA char_order_buf, Y         ; check weight of this slot
-      CMP char_order_buf+1, Y       ; compare to weight of next slot
-      BCC :+                        ; if the weight of this slot is greater (this slot should be after next slot)
-        LDA char_order_buf, Y         ; ... then swap these slots.
-        AND #$03                      ; This swap code is BUGGED, because it gets the index from char_order_buf, which
-        STA $88                       ;  does not actually reflect the character index anymore!  The character index is
-        LDA char_order_buf+1, Y       ;  in @loopctr!  This actually should be swapping @loopctr and @loopctr+1... you
-        AND #$03                      ;  know... the slots we actually checked.
-        STA $89                       ; Because of this, it's possible the routine will screw up the sorting.
-        JSR SwapCharsForSorting
-    
-    : INC @loopctr                  ; do inner loop 3 times (not 4, because we check slot+1)
-      LDA @loopctr
-      CMP #$03
-      BNE @InnerLoop
-      
-    DEC @outerloopctr               ; do outer loop 4 times, so that the last slot has time to be moved all the way
-    BNE @OuterSortLoop              ;  to the front.
-    
     RTS
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
