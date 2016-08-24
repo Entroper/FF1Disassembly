@@ -7092,12 +7092,10 @@ UseItem_House:
     DEC item_house          ; otherwise... remove a house from our inventory
     LDA #120
     JSR MenuRecoverPartyHP  ; give the whole party 120 HP
+    JSR MenuRecoverPartyMP  ; recover MP
     LDA #$1E
     JSR MenuSaveConfirm     ; bring up the save confirmation screen.  (description text $1E)
-
-    BCC :+                    ; if they saved....
-      JSR MenuRecoverPartyMP  ;   recover MP  (note this is done after the save!  some would say this is BUGGED)
-:   JMP EnterItemMenu         ; then, whether they saved or not, re-enter item menu
+:   JMP EnterItemMenu       ; then, whether they saved or not, re-enter item menu
 
   @CantUse:
     LDA #$1F
@@ -7136,7 +7134,6 @@ MenuSaveConfirm:
     JSR DrawItemDescBox       ; "your gave is being saved" or whatever
     JSR SaveGame              ; save the game
     JSR MenuWaitForBtn_SFX    ; then wait for them to press A or B again
-    SEC                       ;  before setting C (to indicate game has been saved)
     RTS                       ;  and exiting
 
 
