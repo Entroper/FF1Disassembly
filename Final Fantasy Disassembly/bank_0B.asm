@@ -15,8 +15,8 @@
 
 BANK_THIS = $0B
 
-;; unknown / unused space  [$8000 :: 0x2C010]
-.INCBIN "bin/0B_8000_unknown.bin"
+;; Battle Domains  [$8000 :: 0x2C010]
+.INCBIN "bin/0B_8000_battledomains.bin"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
