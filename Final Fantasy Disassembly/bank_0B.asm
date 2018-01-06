@@ -52,9 +52,9 @@ data_BattleMessages_Raw:                        ; actual text data
 
 
 
-;; $8FEC - unused space
-  .BYTE $97, $B2, $B7, $AB
-  .BYTE $AC, $B1, $AA, $FF,   $AB, $A4, $B3, $B3,     $A8, $B1, $B6, $00,   $00, $00, $00, $00
+;; $8FEC - "Nothing happens" string
+  .BYTE $97, $B2, $B7, $AB, $AC, $B1, $AA, $FF, $AB, $A4, $B3, $B3, $A8, $B1, $B6, $00
+  .BYTE $00, $00, $00, $00
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
