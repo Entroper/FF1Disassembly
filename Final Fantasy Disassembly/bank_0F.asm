@@ -2296,7 +2296,7 @@ StandardMapLoop:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;  Process SM input   [$C23C :: 0x3C24C]
+;;  Process SM input   [$C9C4 :: 0x3C9D4]
 ;;
 ;;    Updates joy data and does input processing for standard maps.  Shouldn't
 ;;  be called when player is in motion.
