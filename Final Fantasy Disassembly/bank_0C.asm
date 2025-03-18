@@ -5690,21 +5690,18 @@ LoadOneCharacterIBStats:
     LDA #$00            ; if there's no weapon, use $00 as weapon ID
 
   @ApplyWeapon:
-    LDY #btlch_critrate
-    AND #$7F
-    STA (btl_ib_charstat_ptr), Y        ; BUGGED - this sets the critical rate to the weapon index,
-                                        ;  rather than actually fetching the critical rate from the weapon
-                                        ;  stats.
-    
+    AND #$7F                        ; TODO: Can we remove this byte?
     AND #$FF                        ; update Z flag
     BEQ :+                          ; only do this next block if a weapon is actually equipped
-    
         SEC                         ; weapon index is 1-based (convert to 0 based)
         SBC #$01
         JSR GetPointerToWeaponData  ; get a pointer to the weapon data
         STA $88                     ; put the pointer at $88
         STX $89
-      
+        LDY #$02                    ; Load the weapon crit rate data offset
+        LDA ($88), Y                ; Get the current weapon's crit rate data
+        LDY #btlch_critrate
+        STA (btl_ib_charstat_ptr), Y ; Store the crit rate for the current character
         LDY #$07
         LDA ($88), Y
         LDY #btlch_wepplt           ; get palette
@@ -10005,8 +10002,3 @@ data_BattleSoundEffects:
   
 ; BFFB - unused
   .BYTE $00
-  .BYTE $00
-  .BYTE $01
-  .BYTE $09
-  .BYTE $07
-
