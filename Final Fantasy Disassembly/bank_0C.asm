@@ -6880,7 +6880,7 @@ EnemyAi_ShouldPerformAction:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;  Enemy_DoAi  [$B2A2 :: 0x332A2]
+;;  Enemy_DoAi  [$B2A2 :: 0x332B2]
 ;;
 ;;    Have the enemy check its AI and pick an action to perform, then actually perform
 ;;  the action.
